@@ -8,7 +8,7 @@ FROM public.ecr.aws/bitnami/python:3.7
 
 # Specify the maintainer of the Dockerfile
 # This is useful for users who might have questions or need support
-MAINTAINER Amazon AI <sage-learner@amazon.com>
+# MAINTAINER Amazon AI <sage-learner@amazon.com>
 
 # Update the package lists and install necessary packages
 # - wget: for downloading files
@@ -48,7 +48,7 @@ ENV PATH="/opt/program:${PATH}"
 # Copy the application code into the Docker image
 # This assumes there's a directory named 'linear_regression' in the same directory as the Dockerfile
 # COPY linear_regression /opt/program
-COPY app_name /opt/program
+COPY opt_program /opt/program
 
 # Set the working directory to where the application code is located
 # This means subsequent commands will be run from this directory
