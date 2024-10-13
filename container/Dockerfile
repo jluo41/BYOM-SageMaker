@@ -4,7 +4,8 @@
 
 # Use the official Bitnami Python 3.7 image as the base
 # This provides a stable and secure foundation for our Docker image
-FROM public.ecr.aws/bitnami/python:3.7
+# FROM public.ecr.aws/bitnami/python:3.7
+FROM python:3.11-slim
 
 # Specify the maintainer of the Dockerfile
 # This is useful for users who might have questions or need support
@@ -35,7 +36,11 @@ RUN ln -sf /usr/bin/pip3 /usr/bin/pip
 # --no-cache-dir flag prevents caching of installation files, reducing image size
 # Specific versions are pinned to ensure reproducibility
 # Example: numpy==1.16.2 installs version 1.16.2 of numpy
-RUN pip --no-cache-dir install numpy==1.16.2 scipy==1.2.1 scikit-learn==0.20.2 pandas flask gunicorn
+RUN pip --no-cache-dir install numpy scipy scikit-learn pandas flask gunicorn \
+    --trusted-host pypi.org \
+    --trusted-host pypi.python.org \
+    --trusted-host files.pythonhosted.org \
+    --trusted-host download.pytorch.org 
 
 # Set environment variables
 # PYTHONUNBUFFERED=TRUE ensures Python output is sent straight to terminal (helps with logging)
@@ -53,7 +58,6 @@ COPY opt_program /opt/program
 # Set the working directory to where the application code is located
 # This means subsequent commands will be run from this directory
 WORKDIR /opt/program
-
 
 
 
