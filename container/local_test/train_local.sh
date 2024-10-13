@@ -12,10 +12,13 @@ image=$1
 mkdir -p opt_ml/model
 mkdir -p opt_ml/output
 
+
 # Remove any existing files in the model and output directories
 # This ensures a clean state for each training run
 rm opt_ml/model/*
 rm opt_ml/output/*
+
+mkdir -p opt_ml/output/failure
 
 # Run the Docker container for training
 # Explanation of the docker run command:
@@ -23,4 +26,4 @@ rm opt_ml/output/*
 # --rm : Automatically remove the container when it exits
 # ${image} : Use the Docker image specified by the user
 # train : Run the 'train' command inside the container
-docker run -v $(pwd)/test_dir:/opt/ml --rm ${image} train
+docker run -v $(pwd)/opt_ml:/opt/ml --rm ${image} train
