@@ -44,6 +44,11 @@ class ScoringService(object):
             input (a pandas dataframe): The data on which to do the predictions. There will be
                 one prediction per row in the dataframe"""
         lr = lrs.get_model()
+        # print(lr)
+        # # print(input)
+        # input = input.values
+        # print(input)
+        # print(input.shape)
         return lr.predict(input)
 
 
@@ -72,8 +77,12 @@ def transformation():
     # Convert from CSV to pandas
     if flask.request.content_type == "text/csv":
         data = flask.request.data.decode("utf-8")
+        # print(data)
         s = io.StringIO(data)
         data = pd.read_csv(s, header=None)
+        
+        data = data.values[:, 1:4]
+        # print(data)
     else:
         return flask.Response(
             response="This predictor only supports CSV data", status=415, mimetype="text/plain"
@@ -81,6 +90,9 @@ def transformation():
 
     print("Invoked with {} records".format(data.shape[0]))
 
+
+    
+    
     # Do the prediction
     predictions = ScoringService.predict(data)
 
@@ -88,5 +100,7 @@ def transformation():
     out = io.StringIO()
     pd.DataFrame({"results": predictions}).to_csv(out, header=False, index=False)
     result = out.getvalue()
+    
+    print('result:', result)
 
     return flask.Response(response=result, status=200, mimetype="text/csv")

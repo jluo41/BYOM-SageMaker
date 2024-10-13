@@ -48,8 +48,8 @@ def train():
         train_data = pd.concat(raw_data)
 
         # labels are in the first column
-        train_y = train_data.iloc[:,-1]
-        train_X = train_data.iloc[:,1:4]
+        train_y = train_data.iloc[:,-1] # last column
+        train_X = train_data.iloc[:,1:4] # row 1, 2, 3
 
         # Here we only support a single hyperparameter. Note that hyperparameters are always passed in as
         # strings, so we need to do any necessary conversions.
@@ -58,7 +58,11 @@ def train():
             max_leaf_nodes = int(max_leaf_nodes)
 
         # Now use scikit-learn's linear regression classifier to train the model.
-        regressor = DecisionTreeRegressor(random_state=0,criterion='mse',max_depth=100)
+        regressor = DecisionTreeRegressor(random_state=0,criterion='friedman_mse',max_depth=100)
+        
+        print('Training the model.')
+        print('train_X shape:',train_X.shape)
+        print('train_y shape:',train_y.shape)
         lr = regressor.fit(train_X, train_y)
 
         # save the model
@@ -69,6 +73,10 @@ def train():
         # Write out an error file. This will be returned as the failureReason in the
         # DescribeTrainingJob result.
         trc = traceback.format_exc()
+        
+        # if not os.path.exists(output_path):
+        #     os.makedirs(output_path)
+            
         with open(os.path.join(output_path, 'failure'), 'w') as s:
             s.write('Exception during training: ' + str(e) + '\n' + trc)
         # Printing this causes the exception to be in the training job logs, as well.
